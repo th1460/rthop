@@ -1,0 +1,8 @@
+"0","dados %>% "
+"0","  select_if(is.factor) %>% "
+"0","  names() %>% "
+"0","  map_dfr(~ freq2(var = ., data = dados)) %>% "
+"0","  datatable(rownames = FALSE, "
+"0","            colnames = c(""Variável"", ""Categoria"", ""N"", ""%""),"
+"0","            options = list(dom = ""t"", pageLength = 15),"
+"0","            caption = table_nums(""tablesi"", ""Distribuição percentual das variáveis explicativas""))"

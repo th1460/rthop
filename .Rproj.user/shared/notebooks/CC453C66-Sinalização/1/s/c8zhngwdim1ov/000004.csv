@@ -1,0 +1,7 @@
+"0","dados %>% "
+"0","  plot_ly() %>% "
+"0","  add_boxplot(y = ~vmd, x = """", name = ""boxplot"") %>% "
+"0","  add_markers(y = ~vmd, x = """", text = ~amostra, hoverinfo = ""text"", name = ""outlier"", "
+"0","              data = dados %>% filter(isOutlier(vmd, 1.5))) %>% "
+"0","  layout(yaxis = list(title = ""VMD"")) %>% "
+"0","  config(displayModeBar = FALSE)"

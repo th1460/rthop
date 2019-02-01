@@ -1,0 +1,3 @@
+"0","set.seed(568)"
+"0","dados_train <- dados %>% filter(amostra != 30) %>% sample_frac(.8)"
+"0","dados_test <- dados %>% filter(amostra != 30) %>% anti_join(dados_train, by = ""amostra"")"

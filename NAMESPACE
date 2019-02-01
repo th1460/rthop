@@ -1,0 +1,5 @@
+exportPattern("^[[:alpha:]]+")
+import(dplyr)
+import(magrittr)
+import(reshape2)
+importFrom(rlang, sym)

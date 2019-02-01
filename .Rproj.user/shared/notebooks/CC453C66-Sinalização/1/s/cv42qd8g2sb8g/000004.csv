@@ -1,0 +1,7 @@
+"0","dados %>% "
+"0","  plot_ly() %>% "
+"0","  add_boxplot(y = ~preco, x = """", name = ""boxplot"") %>% "
+"0","  add_markers(y = ~preco, x = """", text = ~amostra, hoverinfo = ""text"", name = ""outlier"", "
+"0","              data = dados %>% filter(isOutlier(preco, 1.5))) %>% "
+"0","  layout(yaxis = list(title = ""Preço"")) %>% "
+"0","  config(displayModeBar = FALSE)"
