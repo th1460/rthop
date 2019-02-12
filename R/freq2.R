@@ -1,6 +1,6 @@
-#' @title A Set of Top Functions
+#' @title Frequency to use with purrr::map
 #'
-#' @description A set of top functions
+#' @description Perform frequencies to use with purrr::map
 #'
 #' @param data
 #'

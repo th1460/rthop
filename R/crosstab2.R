@@ -1,6 +1,6 @@
-#' @title A Set of Top Functions
+#' @title Crosstabs to use with purrr::map
 #'
-#' @description A set of top functions
+#' @description Perform crosstabs to use with purrr::map
 #'
 #' @param data
 #'

@@ -5,16 +5,16 @@
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "3707248234",
+    "hash" : "909764256",
     "id" : "4279C7DE",
-    "lastKnownWriteTime" : 1549043142,
-    "last_content_update" : 1549043142613,
+    "lastKnownWriteTime" : 1549303585,
+    "last_content_update" : 1549305121245,
     "path" : "C:/Users/thiago.pires/OneDrive - FGV/DNIT/Analysis/Sinalização/Sinalização.Rmd",
     "project_path" : null,
     "properties" : {
-        "cursorPosition" : "330,534",
-        "last_setup_crc32" : "310934CDfb56ecc8",
-        "scrollLine" : "322"
+        "cursorPosition" : "259,20",
+        "last_setup_crc32" : "",
+        "scrollLine" : "249"
     },
     "relative_order" : 2,
     "source_on_save" : false,

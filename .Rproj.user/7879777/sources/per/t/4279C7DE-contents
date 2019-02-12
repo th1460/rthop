@@ -1,10 +1,10 @@
 ---
 title: "Família de Sinalização"
 author: "Thiago Pires"
-navlink: "<div id = 'container'><img src = 'fgv-logo.png'/></div>"
+navlink: "<div id = 'container'><img src = './resources/images/fgv-logo.png'/></div>"
 date: "`r format(Sys.time(), '%d de %B, %Y')`"
 output: markdowntemplates::skeleton
-css: styles.css
+css: ./resources/css/styles.css
 ---
 
 ```{r setup, include=FALSE}
@@ -29,7 +29,7 @@ require(rthop)
 fig_nums <- captioner(prefix = "Figura")
 table_nums <- captioner(prefix = "Tabela")
 
-dados <- read_xlsx("Sinalização - Base de dados - v2.xlsx", sheet = "dados")
+dados <- read_xlsx("./data/Sinalização - Base de dados - v2.xlsx", sheet = "dados")
 
 dados %<>% 
   mutate(relevo = factor(relevo, levels = c("Plano", "Ondulado", "Montanhoso")),
@@ -124,7 +124,7 @@ shiny::tags$br()
 
 ## Análise das variáveis explicativas
 
-A variável VMD apresenta 7 outliers incluindo a amostra de #30 que também era um outlier na variável preço. A variável área não apresentou outliers.
+A variável VMD apresenta 7 outliers incluindo a amostra #30 que também era um outlier na variável preço. A variável área não apresentou outliers.
 
 <center>
 ```{r fig.cap=fig_nums("vmdsibox", "Boxplot da variável VMD")}
@@ -169,7 +169,7 @@ shiny::tags$br()
 
 ```
 
-Na `r fig_nums("hmexpli", display = "cite")` vemos uma correlação forte entre o número de faixas e vmd (0,752), entre relevo e presença de faixas (0,819). A variável região não foi incluída por ser uma variável nominal com mais de duas categorias.
+Na `r fig_nums("hmexpli", display = "cite")` vemos uma correlação forte entre VMD e número de faixas (0,731); entre VMD e classe (-0,521); e entre número de faixas e o relevo (-0,407). A variável região não foi incluída por ser uma variável nominal com mais de duas categorias. A variável presença de tachas também não foi incluída porque apenas 1 obra não tinha a presença de tachas. 
 
 <center>
 ```{r fig.cap=fig_nums("hmexpli", "Análise da correlação entre as variáveis explicativas")}
@@ -184,8 +184,8 @@ cormat[upper.tri(cormat, diag = TRUE)] <- NA
 cormat %<>% .[-1, -ncol(.)]
 
 cormat %>% round(3) %>% 
-  plot_ly(x = row.names(.), 
-          y = row.names(.), 
+  plot_ly(x = colnames(.), 
+          y = rownames(.), 
           type = "heatmap", z = .) %>% 
   layout(yaxis = list(autorange = "reversed")) %>% 
   config(displayModeBar = FALSE)
@@ -270,6 +270,44 @@ shiny::tags$br()
 
 O coeficiente de determinação deste modelo foi de `r model1 %>% summary() %$% adj.r.squared %>% round(3)` e o MAPE foi de `r predict(model1, dados_test %>% select(preco, classe, vmd, area)) %>% MLmetrics::MAPE(., dados_test %>% pull(preco)) %>% round(3)`.
 
+Na `r fig_nums("bootrsqa", display = "cite")` temos uma distribuição de coneficientes de determinação ajustados gerados por *bootstrap balanceado* com 100 replicações. Observamos com este resultado que a mediana destas replicações foram de aproximadamente 0,694. O limite inferior foi de 0,124 e superior de 0,732, mostrando a instabilidade que existe nas estimativas pelo fato da amostra ser pequena.
+
+<center>
+```{r fig.cap=fig_nums("bootrsqa", "Boxplot com a distribuição de coeficientes de determinação gerados por bootstrap balanceado")}
+
+balancedBoot <- function(data, replication){
+  
+  dataReplic <- data %>% 
+    slice(seq(1, nrow(data)) %>% 
+            rep(replication) %>% 
+            sample(nrow(data) * replication))
+ 
+  dataReplicList <- NULL
+   
+  for (i in 0:(replication - 1)){
+    dataReplicList[[i + 1]] <- dataReplic[(i * nrow(data) + 1):((i + 1) * nrow(data)), ] %>% 
+      mutate(repli = i + 1)
+  }
+  
+  dataReplicList %>% bind_rows()
+
+}
+
+set.seed(142)
+balancedBoot(dados_train, 100) %>% 
+  split(.$repli) %>% 
+  map( ~ lm(preco ~ classe + vmd + area, data = .x)) %>% 
+  map(summary) %>% 
+  map_dbl("adj.r.squared") %>% 
+  tibble(y = .) %>% 
+  plot_ly() %>% 
+  add_boxplot(y = ~y, x = "") %>% 
+  config(displayModeBar = FALSE) %>% 
+  layout(yaxis = list(title = "R^2 ajustado"))
+
+```
+</center>
+
 ### Diagnóstico
 
 O teste de Shapiro não rejeita a hipótese de normalidade dos resíduos considerando um nível de significância de 0,05 (`r shapiro.test(model1$residuals)$p.value %>% pvalue`). Na `r table_nums("dwt", display = "cite")`, através do teste de Durbin-Watson (D-W), verifica-se que os resíduos não são autocorrelacionados.
@@ -291,97 +329,6 @@ shiny::tags$br()
 
 Pelo teste de Breusch-Pagan não há evidências estatísticas para rejeitar a hipótese de homocedasticidade (`r lmtest::bptest(model1)$p.value %>% pvalue`).
 
-## Análise de componentes principais não-linear
-
-```{r results="hide"}
-
-require(homals)
-
-# análise
-
-nlpca <- 
-  dados_train %>% 
-  select(-c(amostra, preco, tachas)) %>% 
-  mutate_if(is.numeric, scale) %>% 
-  as.data.frame() %>% 
-  homals(data = ., ndim = 2, rank = 1, 
-         level = c("nominal", "nominal", "numerical", "numerical", "nominal", "numerical"))
-
-# cargas
-
-cargas <- 
-  nlpca$loadings %>% 
-  enframe() %>% 
-  rowwise() %>% 
-  mutate(D1 = value[1], D2 = value[2]) %>% select(-value)
-
-# autovalores
-
-full_nlpca <- 
-  dados_train %>% 
-  mutate_if(is.numeric, scale) %>% 
-  select(-c(amostra, preco, tachas)) %>% as.data.frame() %>% 
-  homals(data = ., ndim = 6, rank = 1, 
-         level = c("nominal", "nominal", "numerical", "numerical", "nominal", "numerical"))
-
-autoval <- (full_nlpca$eigenvalues/sum(full_nlpca$eigenvalues) * 100) %>% sprintf("%2.1f", .)
-
-```
-
-Nos resultados da análise de componentes principais (`r fig_nums("nlpcaload", display = "cite")`) as duas componentes representam 53.9% de toda a variabilidade, observa-se que sobre a componente 1 há um peso da variável vmd; inversamente sobre esta mesma componente há um peso maior das variáveis classe, área e região. O número de faixas e o relevo apresentam um peso maior na segunda componente. Na `r fig_nums("nlpcacat", display = "cite")` podemos ver as relações entre as categorias das variáveis qualitativas e as quantitativas.
-
-<center>
-```{r fig.cap=fig_nums("nlpcaload", "Cargas fatorias do PCA não-linear")}
-
-# cargas
-
-cargas %>% plot_ly(x = ~D1, y = ~D2, text = ~name, hoverinfo = "text", opacity = 0,
-                   width = 600, height = 500) %>% 
-  config(displayModeBar = FALSE) %>% 
-  add_annotations(x = ~D1,
-                   y = ~D2,
-                   xref = "x", yref = "y",
-                   axref = "x", ayref = "y",
-                   text = "",
-                   showarrow = T,
-                   ax = ~0,
-                   ay = ~0) %>% 
-  layout(xaxis = list(title = glue("Componente 1 ({autoval[1]})")),
-         yaxis = list(title = glue("Componente 2 ({autoval[2]})")))
-
-```
-</center>
-
-<center>
-```{r fig.cap=fig_nums("nlpcacat", "Distribuição das respostas")}
-
-# categorias
-
-categorias <- 
-  nlpca$catscores %>% 
-  enframe()
-
-getDatacat <- function(x) {
-  categorias %>% 
-    filter(name == x) %>% 
-    pull(value) %>% 
-    as.data.frame() %>% 
-    rownames_to_column(var = "categor")}
-
-plot_ly() %>% 
-  config(displayModeBar = FALSE) %>% 
-  add_markers(~D1, ~D2, data = getDatacat("relevo"), name = "relevo", text = ~categor, hoverinfo = "text") %>%
-  add_markers(~D1, ~D2, data = getDatacat("classe"), name = "classe", text = ~categor, hoverinfo = "text") %>% 
-  add_markers(~D1, ~D2, data = getDatacat("vmd"), name = "vmd", text = ~categor, hoverinfo = "text") %>%
-  add_markers(~D1, ~D2, data = getDatacat("nfaixas"), name = "nfaixas", text = ~categor, hoverinfo = "text") %>%
-  add_markers(~D1, ~D2, data = getDatacat("regiao"), name = "regiao", text = ~categor, hoverinfo = "text") %>%
-  add_markers(~D1, ~D2, data = getDatacat("area"), name = "area", text = ~categor, hoverinfo = "text") %>% 
-  layout(xaxis = list(title = glue("Componente 1")),
-         yaxis = list(title = glue("Componente 2")))
-
-```
-</center>
-
 ## Árvore de regressão
 
 Analisando os dados por meio da árvore de regressão foi selecionada somente a variável área como significativa. O custo médio de todas as obras aparece no topo do diagrama (aproximadamente R\$ 1,4 milhão). Uma área menor que 326 mil produziu um custo médio de R\$ 830 mil e uma área menor que 133 mil produziu um custo médio de R\$ 610 mil. Por outro lado uma área maior do que 236 mil produziu um custo médio de R\$ 2,3 milhões.
@@ -393,7 +340,7 @@ require(rpart)
 
 regtree <- 
   dados_train %>% 
-  rpart(preco ~ relevo + classe + vmd + tachas + nfaixas + regiao + area, data = .)
+  rpart(preco ~ relevo + classe + vmd + nfaixas + regiao + area, data = .)
 
 require(rpart.plot)
 
@@ -431,7 +378,7 @@ O modelo também foi analisado através de redes neurais com 80 e 60 neurônios 
 <center>
 ```{r fig.cap=fig_nums("ddn", "Estrutura da rede neural estimada")}
 
-DiagrammeR::grViz("DDN.gv")
+DiagrammeR::grViz("./resources/images/DDN.gv")
 
 ```
 </center>
@@ -446,7 +393,6 @@ cols <- feature_columns(
   column_numeric("vmd", "nfaixas", "area"),
   column_indicator(column_categorical_with_vocabulary_list("relevo", vocabulary_list = unique(dados_train$relevo))),
   column_indicator(column_categorical_with_vocabulary_list("classe", vocabulary_list = unique(dados_train$classe))),
-  column_indicator(column_categorical_with_vocabulary_list("tachas", vocabulary_list = unique(dados_train$tachas))),
   column_indicator(column_categorical_with_vocabulary_list("regiao", vocabulary_list = unique(dados_train$regiao)))
   )
 
@@ -454,7 +400,7 @@ cols <- feature_columns(
 
 sinal_input_fn <- function(data, num_epochs = 1) {
   input_fn(data, 
-           features = c("relevo", "classe", "vmd", "tachas", "nfaixas", "regiao", "area"), 
+           features = c("relevo", "classe", "vmd", "nfaixas", "regiao", "area"), 
            response = "preco",
            batch_size = 20,
            num_epochs = num_epochs)

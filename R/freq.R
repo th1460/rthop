@@ -1,6 +1,6 @@
-#' @title A Set of Top Functions
+#' @title Frequency
 #'
-#' @description A set of top functions
+#' @description Perform frequencies
 #'
 #' @param data
 #'

@@ -1,6 +1,6 @@
-#' @title A Set of Top Functions
+#' @title Is a outlier
 #'
-#' @description A set of top functions
+#' @description In a distribution is defined whether a value is a outlier
 #'
 #' @param x
 #'

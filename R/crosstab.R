@@ -1,6 +1,6 @@
-#' @title A Set of Top Functions
+#' @title Crosstabs
 #'
-#' @description A set of top functions
+#' @description Perform crosstabs
 #'
 #' @param data
 #'
