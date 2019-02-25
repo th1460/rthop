@@ -18,6 +18,7 @@ freq <- function(data, var){
 
   table <-
     data %>%
+    filter(!is.na(!! var)) %>%
     count(!! var) %>%
     mutate(`%` = round(n/sum(n, na.rm = TRUE) * 100, 2)) %>%
     rename(Categoria = !! var, N = n)
