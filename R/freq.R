@@ -23,7 +23,7 @@ freq <- function(data, var){
     rename(Categoria = !! var, N = n)
 
   tibble(Variable = quo_name(quo(!! var))) %>%
-    bind_rows(tibble(`Variável` = rep(NA, nrow(table) -1))) %>%
+    bind_rows(tibble(Variable = rep(NA, nrow(table) -1))) %>%
     bind_cols(table) %>%
     mutate(Variable = ifelse(is.na(Variable), "", Variable))
 
