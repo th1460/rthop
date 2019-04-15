@@ -5,7 +5,7 @@ A set of top functions.
 
 ## Examples
 
-Tabela com análise de frequências
+Table with frequency analysis (`freq2`)
 
 ``` r
 library(rthop)
@@ -17,7 +17,8 @@ dataset <-
   mutate_all(as.factor) %>% 
   filter(Sex != "", Embarked != "")
 
-c("Survived", "Pclass", "Sex", "Embarked") %>% purrr::map_dfr(~ freq2(dataset, var = .x))
+c("Survived", "Pclass", "Sex", "Embarked") %>% 
+  purrr::map_dfr(~ freq2(dataset, var = .x))
 ```
 
     ## # A tibble: 10 x 4
@@ -33,3 +34,17 @@ c("Survived", "Pclass", "Sex", "Embarked") %>% purrr::map_dfr(~ freq2(dataset, v
     ##  8 Embarked C           168 18.9 
     ##  9 ""       Q            77  8.66
     ## 10 ""       S           644 72.4
+
+Transforme CEP in geographic coordinate (`cep2coo`)
+
+``` r
+c("20950240", "20090003", "22230090") %>% 
+  purrr::map_dfr(~cep2coo(.x))
+```
+
+    ## # A tibble: 3 x 3
+    ##     lat   lon cep     
+    ##   <dbl> <dbl> <chr>   
+    ## 1 -22.9 -43.3 20950240
+    ## 2 -22.9 -43.2 20090003
+    ## 3 -22.9 -43.2 22230090

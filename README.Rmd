@@ -12,7 +12,7 @@ A set of top functions.
 
 ## Examples
 
-Tabela com análise de frequências
+Table with frequency analysis (`freq2`)
 
 ```{r}
 
@@ -25,8 +25,17 @@ dataset <-
   mutate_all(as.factor) %>% 
   filter(Sex != "", Embarked != "")
 
-c("Survived", "Pclass", "Sex", "Embarked") %>% purrr::map_dfr(~ freq2(dataset, var = .x))
+c("Survived", "Pclass", "Sex", "Embarked") %>% 
+  purrr::map_dfr(~ freq2(dataset, var = .x))
 
 ```
 
+Transforme CEP in geographic coordinate (`cep2coo`)
+
+```{r}
+
+c("20950240", "20090003", "22230090") %>% 
+  purrr::map_dfr(~cep2coo(.x))
+
+```
 

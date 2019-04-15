@@ -28,7 +28,8 @@ cep2coo <- function(cep){
       coo <- photon::geocode(iconv(address,
                                    from = "UTF-8",
                                    to = "ASCII//TRANSLIT"),
-                             limit = 1)[,c("lat", "lon")]
+                             limit = 1)[,c("lat", "lon")] %>%
+        as_tibble() %>% bind_cols(cep = cep)
     }
 
   } else {
