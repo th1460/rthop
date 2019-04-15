@@ -1,0 +1,32 @@
+---
+title: "rthop"  
+author: "Thiago Pires"  
+output: 
+  html_document: 
+    keep_md: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+A set of top functions.
+
+## Examples
+
+```{r}
+
+library(rthop)
+library(dplyr)
+
+dataset <- 
+  titanic::titanic_train %>% 
+  select(Survived, Pclass, Sex, Embarked) %>% 
+  mutate_all(as.factor) %>% 
+  filter(Sex != "", Embarked != "")
+
+c("Survived", "Pclass", "Sex", "Embarked") %>% purrr::map_dfr(~ freq2(dataset, var = .x))
+
+```
+
+
