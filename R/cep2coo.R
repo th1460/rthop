@@ -1,6 +1,6 @@
 #' @title From CEP to geographic coordinate system
 #'
-#' @description Transforme CEP in geographic coordinate system
+#' @description Transforme CEP in geographic coordinate system using viacep.com.br
 #'
 #' @param cep Number with 8 digits
 #'

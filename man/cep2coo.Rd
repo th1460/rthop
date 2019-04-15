@@ -10,7 +10,7 @@ cep2coo(cep)
 \item{cep}{Number with 8 digits}
 }
 \description{
-Transforme CEP in geographic coordinate system
+Transforme CEP in geographic coordinate system using viacep.com.br
 }
 \examples{
 NULL
