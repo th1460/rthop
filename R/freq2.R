@@ -2,9 +2,9 @@
 #'
 #' @description Perform frequencies to use with purrr::map
 #'
-#' @param data
+#' @param data Dataset
 #'
-#' @param var
+#' @param var Variable
 #'
 #' @return NULL
 #'

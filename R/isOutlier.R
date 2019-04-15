@@ -2,9 +2,9 @@
 #'
 #' @description In a distribution is defined whether a value is a outlier
 #'
-#' @param x
+#' @param x Variable
 #'
-#' @param a
+#' @param a Multiplicative factor (a * interquartile range)
 #'
 #' @return NULL
 #'

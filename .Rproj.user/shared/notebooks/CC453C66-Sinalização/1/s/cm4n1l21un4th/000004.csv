@@ -1,5 +1,0 @@
-"0","dados %>% "
-"0","  plot_ly() %>% "
-"0","  add_boxplot(y = ~area, x = """", name = ""boxplot"") %>% "
-"0","  layout(yaxis = list(title = ""Área"")) %>% "
-"0","  config(displayModeBar = FALSE)"

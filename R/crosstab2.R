@@ -2,13 +2,13 @@
 #'
 #' @description Perform crosstabs to use with purrr::map
 #'
-#' @param data
+#' @param data Dataset
 #'
-#' @param varX
+#' @param varX Variable
 #'
-#' @param varY
+#' @param varY Variable
 #'
-#' @param categ
+#' @param categ Choose category from y variable to analyse
 #'
 #' @return NULL
 #'
