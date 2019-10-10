@@ -16,7 +16,7 @@ cep2coo <- function(cep){
 
     res <- httr::GET(glue::glue("viacep.com.br/ws/{cep}/json/")) %>% httr::content()
 
-    if(grepl("erro", names(res))){
+    if(grepl("erro", names(res)) %>% any){
 
       stop("CEP não existe")
 
@@ -29,7 +29,10 @@ cep2coo <- function(cep){
                                    from = "UTF-8",
                                    to = "ASCII//TRANSLIT"),
                              limit = 1)[,c("lat", "lon")] %>%
-        as_tibble() %>% bind_cols(cep = cep)
+        as_tibble() %>%
+        bind_cols(cep = cep) %>%
+        select(cep, lat, lon)
+
     }
 
   } else {
