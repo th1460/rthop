@@ -10,7 +10,7 @@ name: R-CMD-check
 
 jobs:
   R-CMD-check:
-    runs-on: macOS-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
       - uses: r-lib/actions/setup-r@master
@@ -18,6 +18,9 @@ jobs:
         run: |
           install.packages(c("remotes", "rcmdcheck"))
           remotes::install_deps(dependencies = TRUE)
+        shell: Rscript {0}
+      - name: Install packages
+        run: |
           remotes::install_github("rCarto/photon")
         shell: Rscript {0}
       - name: Check
