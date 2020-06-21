@@ -5,6 +5,8 @@ rthop
 
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+[![R build
+status](https://github.com/th1460/rthop/workflows/R-CMD-check/badge.svg)](https://github.com/th1460/rthop/actions)
 <!-- badges: end -->
 
 A set of top functions.
