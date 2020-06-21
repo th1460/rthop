@@ -18,7 +18,7 @@ cep2coo <- function(cep){
 
     if(grepl("erro", names(res)) %>% any){
 
-      stop("CEP não existe")
+      stop("CEP no exist")
 
     } else {
 
@@ -37,7 +37,7 @@ cep2coo <- function(cep){
 
   } else {
 
-    stop("Número de digitos inválido")
+    stop("Invalid number of digits")
 
   }
 

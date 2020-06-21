@@ -8,11 +8,32 @@ output:
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 ```
 
+<!-- badges: start -->
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+[![R build status](https://github.com/th1460/rthop/workflows/R-CMD-check/badge.svg)](https://github.com/th1460/rthop/actions)
+<!-- badges: end -->
+
 A set of top functions.
+
+## Install
+
+```{r eval=FALSE}
+
+remotes::install_github("th1460/rthop")
+
+```
+
+### Install dependencies
+
+```{r eval=FALSE}
+
+remotes::install_github("rCarto/photon")
+
+```
 
 ## Examples
 
-Table with frequency analysis (`freq2`)
+Frequency analysis (`freq`)
 
 ```{r}
 
@@ -22,13 +43,23 @@ library(dplyr)
 dataset <- 
   titanic::titanic_train %>% 
   select(Survived, Pclass, Sex, Embarked) %>% 
-  mutate_all(as.factor) %>% 
-  filter(Sex != "", Embarked != "")
+  filter(Sex != "", Embarked != "") %>% 
+  mutate_all(as.factor)
 
 c("Survived", "Pclass", "Sex", "Embarked") %>% 
-  purrr::map_dfr(~ freq2(dataset, var = .x))
+  purrr::map_dfr(~ freq(dataset, !! rlang::sym(.x)))
 
 ```
+
+Contigency tables (`crosstab`)
+
+```{r}
+
+c("Pclass", "Sex", "Embarked") %>%
+  purrr::map_dfr(~ crosstab(dataset, !! rlang::sym(.x), Survived))
+
+```
+
 
 Transforme CEP in geographic coordinate (`cep2coo`)
 

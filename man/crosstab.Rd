@@ -4,16 +4,16 @@
 \alias{crosstab}
 \title{Crosstabs}
 \usage{
-crosstab(data, varX, varY, categ)
+crosstab(data, x, y, simulate.p.value = FALSE)
 }
 \arguments{
 \item{data}{Dataset}
 
-\item{varX}{Variable}
+\item{x}{Variable x}
 
-\item{varY}{Variable}
+\item{y}{Variable y}
 
-\item{categ}{Choose category from y variable to analyse}
+\item{simulate.p.value}{Use p-value simulated}
 }
 \description{
 Perform crosstabs

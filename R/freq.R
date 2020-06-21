@@ -4,7 +4,7 @@
 #'
 #' @param data Dataset
 #'
-#' @param var Variable
+#' @param x Variable
 #'
 #' @return NULL
 #'
@@ -12,20 +12,18 @@
 #'
 #' @export
 
-freq <- function(data, var){
-
-  var <- enquo(var)
+freq <- function(data, x) {
 
   table <-
     data %>%
-    filter(!is.na(!! var)) %>%
-    count(!! var) %>%
+    filter(!is.na({{x}})) %>%
+    count({{x}}) %>%
     mutate(`%` = round(n/sum(n, na.rm = TRUE) * 100, 2)) %>%
-    rename(Categoria = !! var, N = n)
+    rename(Levels = {{x}}, N = n)
 
-  tibble(Variable = quo_name(quo(!! var))) %>%
-    bind_rows(tibble(Variable = rep(NA, nrow(table) -1))) %>%
+  tibble(Variable = quo_name(quo({{x}}))) %>%
+    bind_rows(tibble(Variable = rep(NA, nrow(table) - 1))) %>%
     bind_cols(table) %>%
-    mutate(Variable = ifelse(is.na(Variable), "", Variable))
+    mutate(Variable = ifelse(is.na(Variable), NA, Variable))
 
 }

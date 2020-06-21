@@ -4,12 +4,12 @@
 \alias{freq}
 \title{Frequency}
 \usage{
-freq(data, var)
+freq(data, x)
 }
 \arguments{
 \item{data}{Dataset}
 
-\item{var}{Variable}
+\item{x}{Variable}
 }
 \description{
 Perform frequencies
