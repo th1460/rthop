@@ -17,8 +17,8 @@ jobs:
       - name: Install dependencies
         run: |
           Rscript -e 'install.packages(c("remotes", "rcmdcheck"))' \
-                  -e 'remotes::install_deps(dependencies = TRUE)' \
-                  -e 'remotes::install_github("rCarto/photon")'
+                  -e 'remotes::install_github("rCarto/photon")' \
+                  -e 'remotes::install_deps(dependencies = TRUE)'
       - name: Check
         run: rcmdcheck::rcmdcheck(args = "--no-manual", error_on = "error")
         shell: Rscript {0}
