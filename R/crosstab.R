@@ -56,7 +56,7 @@ crosstab <- function(data, x, y, simulate.p.value = FALSE) {
 
       `P-value` = c(
                     glue::glue("{chisq_test %$% p.value %>% round(4)} (Chi-square)"),
-                    glue::glue("{validate}% < 5 (Fisher = {fisher_test %$% p.value %>% round(4)})"),
+                    glue::glue("{validate %>% round(1)}% < 5 (Fisher = {fisher_test %$% p.value %>% round(4)})"),
                     rep("", nrow(table) - 2))
 
     )
