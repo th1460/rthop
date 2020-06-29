@@ -21,6 +21,7 @@ crosstab <- function(data, x, y, simulate.p.value = FALSE) {
   table <-
     data %>%
     count({{x}}, {{y}}) %>%
+    na.omit() %>%
     group_by({{y}}) %>%
     mutate(perc = round(n/sum(n, na.rm = TRUE) * 100, 2)) %>%
     ungroup() %>%
