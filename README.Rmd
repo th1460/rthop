@@ -1,12 +1,15 @@
 ---
-title: "rthop"  
-output: 
-  github_document
+output: github_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+
+source("man/figures/hexsticker.R")
+
 ```
+
+# rthop <img src='man/figures/hexsticker.png' align="right" height="139" />
 
 <!-- badges: start -->
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
